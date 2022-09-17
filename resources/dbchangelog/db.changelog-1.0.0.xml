@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="1.0.0" author="liquibase">
+        <ext:createCollection collectionName="key-pair">
+	    </ext:createCollection>
+        <ext:createIndex collectionName="key-pair">
+            <ext:keys>
+                { host: 1}
+            </ext:keys>
+            <ext:options>
+                {unique: false, name: "_host_"}
+            </ext:options>
+        </ext:createIndex>
+
+        <ext:createCollection collectionName="end-point">
+	    </ext:createCollection>
+        <ext:createIndex collectionName="end-point">
+            <ext:keys>
+                { end_point_id: 1}
+            </ext:keys>
+            <ext:options>
+                {unique: true, name: "_end_point_id_"}
+            </ext:options>
+        </ext:createIndex>
+        <ext:createIndex collectionName="end-point">
+            <ext:keys>
+                { application_code: 1}
+            </ext:keys>
+            <ext:options>
+                {unique: false, name: "_application_code_"}
+            </ext:options>
+        </ext:createIndex>
+        <ext:insertMany collectionName="end-point">
+            <ext:documents>
+                [
+                    {
+                        "http_method": "POST",
+                        "path": "/login",
+                        "application_code": "portal-backend",
+                        "end_point_id": 1,
+                        "is_public": true
+                    },
+                    {
+                        "http_method": "GET",
+                        "path": "/currencies",
+                        "application_code": "portal-backend",
+                        "end_point_id": 2,
+                        "is_public": false
+                    },
+                    {
+                        "http_method": "GET",
+                        "path": "/sites",
+                        "application_code": "portal-backend",
+                        "end_point_id": 3,
+                        "is_public": false
+                    },                    
+                    {
+                        "http_method": "GET",
+                        "path": "/deals",
+                        "application_code": "portal-backend",
+                        "end_point_id": 4,
+                        "is_public": false
+                    },
+                    {
+                        "http_method": "GET",
+                        "path": "/deals/{fxd}",
+                        "application_code": "portal-backend",
+                        "end_point_id": 5,
+                        "isPublic": false
+                    },
+                    {
+                        "http_method": "POST",
+                        "path": "/deals/{fxd}/freeze",
+                        "applicationCode": "portal-backend",
+                        "end_point_id": 6,
+                        "is_public": false
+                    }
+                ]
+            </ext:documents>
+  	    </ext:insertMany>
+
+        <ext:createCollection collectionName="role">
+	    </ext:createCollection>
+        <ext:createIndex collectionName="role">
+            <ext:keys>
+                { role_code: 1}
+            </ext:keys>
+            <ext:options>
+                {unique: true, name: "_role_code_"}
+            </ext:options>
+        </ext:createIndex>
+        <ext:createIndex collectionName="role">
+            <ext:keys>
+                { application_code: 1}
+            </ext:keys>
+            <ext:options>
+                {unique: false, name: "_application_code_"}
+            </ext:options>
+        </ext:createIndex>
+        <ext:insertMany collectionName="role">
+            <ext:documents>
+                [
+                    {
+                        "application_code": "portal-backend",
+                        "role_code": "DEFAULT_ROLE",
+                        "description": "Default role for every profile",
+                        "end_point_id": [
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "application_code": "portal-backend",
+                        "role_code": "DEAL_VIEWER",
+                        "description": "Role for viewing deals",
+                        "end_point_id": [
+                            4,
+                            5
+                        ]
+                    },
+                    {
+                        "application_code": "portal-backend",
+                        "role_code": "DEAL_MAKER",
+                        "description": "Role for updating deals",
+                        "end_point_id": [
+                            6
+                        ]
+                    }
+                ]
+            </ext:documents>
+  	    </ext:insertMany>
+
+        <ext:createCollection collectionName="profile">
+	    </ext:createCollection>
+        <ext:createIndex collectionName="profile">
+            <ext:keys>
+                { profile_code: 1}
+            </ext:keys>
+            <ext:options>
+                {unique: true, name: "_profile_code_"}
+            </ext:options>
+        </ext:createIndex>
+
+        <ext:createCollection collectionName="user">
+	    </ext:createCollection>
+        <ext:createIndex collectionName="user">
+            <ext:keys>
+                { user_id: 1}
+            </ext:keys>
+            <ext:options>
+                {unique: true, name: "_user_id_"}
+            </ext:options>
+        </ext:createIndex>
+        <ext:insertMany collectionName="user">
+            <ext:documents>
+                [
+                    {
+                        "created_by": "authorization-serv",
+                        "created_date_time": "2022-09-12T02:45:13.956154+00:00",
+                        "updated_by": "authorization-serv",
+                        "updated_date_time": "2022-09-12T02:45:13.956154+00:00",
+                        "status": "ACTIVE",
+                        "version": 1,
+                        "user_id": "admin",
+                        "first_name": "System",
+                        "last_name": "Admin",
+                        "email": "system_admin@email.com",
+                        "profile_code": []
+                    }
+                ]
+            </ext:documents>
+  	    </ext:insertMany>
+
+	</changeSet>
+
+</databaseChangeLog>

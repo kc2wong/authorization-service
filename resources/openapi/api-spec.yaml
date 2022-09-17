@@ -1,0 +1,564 @@
+openapi: 3.0.3
+info:
+  title: Authorization Service - OpenAPI 3.0
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/authorization-serv
+paths:
+  /system-settings:
+    get:
+      tags:
+        - System Setting
+      summary: Get system settings
+      operationId: getSystemSetting
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SystemSetting'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /access-tokens/{userId}:
+    post:
+      tags:
+        - Access Token
+      summary: Generate access token
+      operationId: createAccessToken
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: Id of the user
+        - in: query
+          name: siteCode
+          schema:
+            type: string
+          required: false
+          description: Get access right of particular site
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - accessToken
+                properties:
+                  accessToken:
+                    type: string
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /end-points:
+    get:
+      tags:
+        - EndPoint
+      summary: Find EndPoints
+      operationId: findEndPoint
+      parameters:
+        - in: query
+          name: applicationCode
+          schema:
+            type: string
+          required: false
+          description: Application of endPoint
+        - in: query
+          name: endPointId
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+          required: false
+          description: Id of endPoint
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EndPoint'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /roles:
+    get:
+      tags:
+        - Role
+      summary: Find Roles
+      operationId: findRole
+      parameters:
+        - in: query
+          name: applicationCode
+          schema:
+            type: string
+          required: false
+          description: Application of endPoint
+        - in: query
+          name: roleCode
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+          description: Code of the role
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /profiles:
+    get:
+      tags:
+        - Profile
+      summary: Find Profiles
+      operationId: findProfile
+      parameters:
+        - in: query
+          name: applicationCode
+          schema:
+            type: string
+          required: false
+          description: Application of endPoint
+        - in: query
+          name: profileCode
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+          description: Code of the profile
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'  
+    post:
+      tags:
+        - Profile
+      summary: Create Profile
+      operationId: createProfile
+      security:
+        - jwt: []
+      requestBody:
+        # for connexion to bind the requestBody variable when calling controller api
+        x-body-name: update_profile_request
+        required: true
+        description: User object to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'                  
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /profiles/{profileCode}:
+    put:
+      tags:
+        - Profile
+      summary: Update Profile
+      operationId: updateProfile
+      security:
+        - jwt: []
+      parameters:
+        - in: path
+          name: profileCode
+          schema:
+            type: string
+          required: true
+          description: Code of the profile
+      requestBody:
+        # for connexion to bind the requestBody variable when calling controller api
+        x-body-name: update_profile_request
+        required: true
+        description: Profile object to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profile'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
+  /users:
+    post:
+      tags:
+        - User
+      summary: Create User
+      operationId: createUser
+      security:
+        - jwt: []
+      requestBody:
+        x-body-name: update_user_request
+        required: true
+        description: User object to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid user input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/{userId}:
+    get:
+      tags:
+        - User
+      summary: Get User by id
+      description: This can only be done by the logged in user.
+      operationId: getUserById
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: Id of the user
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - User
+      summary: Update User
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      security:
+        - jwt: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: Id of the user
+      requestBody:
+        x-body-name: update_user_request
+        required: true
+        description: User object to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          description: Unexpected failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
+components:
+  schemas:
+    Status:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+    PublicKey:
+      type: object
+      required:
+        - host
+        - keyString
+        - applicationCode
+        - path
+        - isPublic
+      properties:
+        host:
+          type: string
+          description: Name of host that owns this public key
+        keyString:
+          type: string
+          description: Key in PEM format
+    SystemSetting:
+      type: object
+      required:
+        - publicKey
+      properties:
+        publicKey:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicKey'
+    EndPoint:
+      type: object
+      required:
+        - endPointId
+        - httpMethod
+        - applicationCode
+        - path
+        - isPublic
+      properties:
+        endPointId:
+          type: integer
+          format: int32
+        httpMethod:
+          type: string
+          enum:
+            - GET
+            - PUT
+            - POST
+            - DELETE
+        applicationCode:
+          type: string
+        path:
+          type: string
+        isPublic:
+          type: boolean
+    Role:
+      type: object
+      required:
+        - applicationCode
+        - roleCode
+        - description
+        - endPointId
+        - status
+      properties:
+        applicationCode:
+          type: string
+        roleCode:
+          type: string
+        description:
+          type: string
+        endPointId:
+          type: array
+          items:
+            type: integer
+            format: int32
+        status:
+          $ref: '#/components/schemas/Status'
+    UpdateProfileRequest:
+      type: object
+      required:
+        - applicationCode
+        - profileCode
+        - description
+        - roleCode
+        - siteCode
+        - status
+        - version
+      properties:
+        applicationCode:
+          type: string
+        profileCode:
+          type: string
+        description:
+          type: string
+        roleCode:
+          type: array
+          items:
+            type: string
+        siteCode:
+          type: array
+          items:
+            type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        version:
+          type: integer
+          format: int64
+          description: Value is ignored when create new profile
+    Profile:
+      type: object
+      required:
+        - createdBy
+        - createdDateTime
+        - updatedBy
+        - updatedDateTime
+      allOf:
+        - $ref: '#/components/schemas/UpdateProfileRequest'
+      properties:
+        createdBy:
+          type: string
+        createdDateTime:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+        updatedDateTime:
+          type: string
+          format: date-time
+    UpdateUserRequest:
+      type: object
+      required:
+        - userId
+        - firstName
+        - lastName
+        - status
+        - profileCode
+        - version
+      properties:
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        profileCode:
+          type: array
+          items:
+            type: string
+        version:
+          type: integer
+          format: int64
+          description: Value is ignored when create new user            
+    User:
+      type: object
+      required:
+        - createdBy
+        - createdDateTime
+        - updatedBy
+        - updatedDateTime
+      allOf:
+        - $ref: '#/components/schemas/UpdateUserRequest'
+      properties:
+        createdBy:
+          type: string
+        createdDateTime:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+        updatedDateTime:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/Status'
+        version:
+          type: integer
+          format: int64
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        param:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+      
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      # used by connexion
+      x-bearerInfoFunc: openapi_server.controllers.security_controller.decode_jwt

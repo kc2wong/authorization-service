@@ -1,0 +1,8 @@
+Flask == 2.1.0
+pymongo >= 4.2.0
+dnspython >= 2.2.1
+inflection >= 0.5.1
+python-dotenv >= 0.20.0
+cryptography >= 38.0.0
+pyjwt >= 2.4.0
+pyliquibase >= 2.0.11
