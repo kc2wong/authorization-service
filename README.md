@@ -17,8 +17,8 @@ This application is originally written in Java with RBD as backend storage
 - Java 11+
 - MongoDB 5.x
     - Sign up a free mongodb cluster at https://www.mongodb.com/atlas/database
-    - Create a user with ==Password== as authentication method and ==Atlas admin== as role
-    - Create a new database ==authorization-db==
+    - Create a user with ***Password*** as authentication method and ***Atlas admin*** as role
+    - Create a new database ***authorization-db***
 
 
 ### Setup
@@ -27,7 +27,7 @@ This application is originally written in Java with RBD as backend storage
     2. Fill the value for url, username, password
     3. The value of url is in format of mongodb+srv://[cluster-name]/authorization-db?authSource=admin, the cluster-name can be found in mongodb atlas admin page
     4. Open the file src/.env
-    5. Fill the value for ==MONGODB_URI==, ==MONGODB_USER==, ==MONGODB_PASSWORD==
+    5. Fill the value for ***MONGODB_URI***, ***MONGODB_USER***, ***MONGODB_PASSWORD***
 
 2. Initialize database
     1. Run the command `./gradlew update` (Mac) or `gradlew update` (Windows)
@@ -56,4 +56,4 @@ Open the URL http://localhost:8080/authorization-serv/ui/ in browser
 1. requirements.mustache
     - Flask >= 1.1.2 , in order to use Flask 2.0 in src/openapi_server/requirements.txt
 2. controller.mustache
-    - Implement api delegate pattern.  Instead of returning the default result ==do some magic!==, it looks for the class ==[controller]_impl== in module openapi_server.controllers and call the same method
+    - Implement api delegate pattern.  Instead of returning the default result ***do some magic!***, it looks for the class ***[controller]_impl*** in module openapi_server.controllers and call the same method
