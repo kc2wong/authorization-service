@@ -69,3 +69,7 @@ target/
 .gradle/
 .idea/
 .vscode/
+
+# Configuration files with secret
+src/.env
+resources/dbchangelog/liquibase.properties
